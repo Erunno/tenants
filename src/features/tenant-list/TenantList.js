@@ -2,7 +2,6 @@ import moment from 'moment/moment';
 import { useState } from 'react';
 import EditTenant from './EditTenant';
 import './TenantList.css';
-import TenantRow from './TenantRow';
 import TenantRowSet from './TenantRowSet';
 
 export default function TenantList({ onTenantsChanged }) {
@@ -51,14 +50,18 @@ export default function TenantList({ onTenantsChanged }) {
 
     function showOrHideTenant(name) {
         const newTenants = tenantList
-            .map(t => t.name === name ? ({ ...t, newlyAdded: false, hidden: !t.hidden }) : t)
+            .map(t => t.name === name ? ({ ...t, newlyAdded: false, hidden: !t.hidden }) : t);
+        
+        const hiddenTenantsCount = newTenants.filter(t => t.hidden).length;
+        if(hiddenTenantsCount === 0) setShowHidden(false);
+        
         setTenantList(newTenants);
     }
 
     function toggleHiddenTenants() {
         const eddiedTenants = tenantList.map(t => ({
             ...t,
-            newlyAdded: t.hidden
+            newlyAdded: t.hidden // this line ensures that rows are animated in
         }));
 
         setTenantList(eddiedTenants);
@@ -112,6 +115,7 @@ export default function TenantList({ onTenantsChanged }) {
 
                 {showHidden && <TenantRowSet
                     tenants={hiddenTenants}
+                    offset={shownTenants.length}
                     allNames={tenantList.map(t => t.name)}
                     callbacks={rowSetCallbacks}
                 />}
