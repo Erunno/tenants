@@ -6,15 +6,15 @@ function fromMomentToInputString(mmt) {
     return mmt ? mmt.format('YYYY-MM-DD') : '';
 }
 
-export default function EditTenant({ forbiddenNames = [], name = '', from = null, to = null, tillNow = false, onSave }) {
+export default function EditTenant({ forbiddenNames = [], tenantData, onSave, onCancel }) {
 
-    const [newName, setNewName] = useState(name);
-    const [newFrom, setNewFrom] = useState(fromMomentToInputString(from));
-    const [newTo, setNewTo] = useState(fromMomentToInputString(to));
-    const [newTillNow, setNewTillNow] = useState(tillNow);
+    const [newName, setNewName] = useState(tenantData?.name ?? '');
+    const [newFrom, setNewFrom] = useState(fromMomentToInputString(tenantData?.from));
+    const [newTo, setNewTo] = useState(fromMomentToInputString(tenantData?.to));
+    const [newTillNow, setNewTillNow] = useState(tenantData ? !tenantData.to : false);
 
     function toMoment(inputString) {
-        return moment(moment(inputString, 'YYYY-MM-DD'))
+        return moment(inputString, 'YYYY-MM-DD');
     }
 
     function onSaveInternal(e) {
@@ -30,12 +30,21 @@ export default function EditTenant({ forbiddenNames = [], name = '', from = null
         setNewTillNow(false);
     }
 
-
-
     function tillNowChanged(e) {
         setNewTo('');
         setNewTillNow(e.target.checked);
     }
+
+    function countDays() {
+        if (newFrom === '' || (newTo === '' && newTillNow === false))
+            return;
+        
+        const from = toMoment(newFrom);
+        const to = newTillNow ? moment() : moment(newTo);
+        
+        return to.diff(from, 'days') + 1;
+    }
+    
 
     const nameIsForbidden = forbiddenNames.filter(n => newName.trim() === n).length !== 0;
     const nameIsInvalidClass = nameIsForbidden ? 'invalid' : '';
@@ -87,9 +96,10 @@ export default function EditTenant({ forbiddenNames = [], name = '', from = null
             </div>
 
         </td>
-        <td>4</td>
+        <td><div className='mt-2'>{countDays()}</div></td>
         <td>
             <button type="button" className="btn btn-success" onClick={onSaveInternal} disabled={!correctlyFilled}>Save</button>
+            {onCancel && <button type="button" className="btn btn-danger ms-2" onClick={onCancel}>Cancel</button>}
         </td>
     </tr>
 } 
