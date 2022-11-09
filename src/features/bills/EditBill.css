@@ -1,0 +1,18 @@
+.bill-interval-container,
+.bill-name-input-container {
+    display: flex;
+    align-items: center;
+}
+
+.bill-name-input {
+    max-width: 30rem;
+}
+
+.bill-edit-btn-container {
+    display: flex;
+}
+
+.note-note {
+    font-size: small;
+    font-weight: 200;
+}

@@ -1,0 +1,4 @@
+.cancel-btn {
+    color: var(--bs-red);
+    cursor: pointer;
+}

@@ -1,8 +1,8 @@
 import './EditTenant.css';
 import moment from "moment/moment";
 import { useState } from "react";
-import SaveBtn from '../../shared/components/SaveBtn';
-import CancelBtn from '../../shared/components/CancelBtn';
+import SaveBtnSmall from '../../shared/components/SaveBtnSmall';
+import CancelBtnSmall from '../../shared/components/CancelBtnSmall';
 
 function fromMomentToInputString(mmt) {
     return mmt ? mmt.format('YYYY-MM-DD') : '';
@@ -101,8 +101,8 @@ export default function EditTenant({ forbiddenNames = [], tenantData, tenantId, 
         </td>
         <td><div>{countDays()}</div></td>
         <td>
-            <SaveBtn onClick={onSaveInternal} disabled={!correctlyFilled}/>
-            {onCancel && <CancelBtn onClick={onCancel}/>}
+            <SaveBtnSmall onClick={onSaveInternal} disabled={!correctlyFilled}/>
+            {onCancel && <CancelBtnSmall onClick={onCancel}/>}
         </td>
     </tr>
 } 

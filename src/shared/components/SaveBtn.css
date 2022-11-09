@@ -1,9 +1,7 @@
-.save-btn {
-  color: var(--bs-green);
-  cursor: pointer;
-}
-
-.save-btn-disabled {
-  cursor: default;
-  color: var(--bs-gray-600);
-}
+.general-save-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: max-content;
+  }
+  

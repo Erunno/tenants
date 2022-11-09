@@ -1,6 +1,7 @@
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { showDateFormat } from '../../constants';
+import DeleteBtn from '../../shared/components/DeleteBtn';
 import countDays from '../../shared/count-days';
 import './Bill.css';
 
@@ -93,7 +94,7 @@ export default function Bill({ billData: { id, name, note, amount, from, to, pay
                         <p className="card-text">{amount.toFixed(2)} €</p>
                     </div>
 
-                    <div className='col-auto mb-4'>
+                    <div className='col-auto mb-4 me-4'>
                         <h5 className="card-subtitle mb-2">Interval</h5>
                         <p className="card-text">{fromToString}</p>
                     </div>
@@ -146,6 +147,10 @@ export default function Bill({ billData: { id, name, note, amount, from, to, pay
                             </div>
                         </div>)}
                     </div></>}
+
+                <div className="mt-4"></div>
+
+                <DeleteBtn label={'Delete Bill'}/>
 
             </div>
         </div>

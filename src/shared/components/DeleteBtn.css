@@ -1,6 +1,10 @@
-.general-cancel-btn {
+.general-delete-btn {
   display: flex;
   align-items: center;
   justify-content: center;
   width: max-content;
+}
+
+.trash {
+  scale: 1.1;
 }

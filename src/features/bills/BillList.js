@@ -1,7 +1,11 @@
+import { useState } from "react";
 import AddNewBtn from "../../shared/components/AddNewBtn";
 import Bill from "./Bill";
+import EditBill from "./EditBill";
 
 export default function BillList({ billList, tenants, onBillsChanged }) {
+
+    const [addingNewBill, setAddingNewBill] = useState(false);
 
     function toggleTenantPaid(billId, tenantId) {
         const newBillList = billList.map(bill => {
@@ -24,9 +28,17 @@ export default function BillList({ billList, tenants, onBillsChanged }) {
             Bills
         </h1>
 
-        <AddNewBtn label={'Add New Bill'} />
+        {!addingNewBill && <>
+            <AddNewBtn label={'Add New Bill'} onClick={() => setAddingNewBill(true)} />
+            <div className="mb-3" />
+        </>}
 
-        <div className="mb-3" />
+        {addingNewBill && <EditBill
+            onCancel={() => setAddingNewBill(false)}
+            onSave={null}
+        />}
+
+
 
         {billList.map((bill, i) =>
             <Bill
