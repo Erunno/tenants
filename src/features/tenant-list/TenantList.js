@@ -1,18 +1,16 @@
 import { useState } from 'react';
+import AddNewBtn from '../../shared/components/AddNewBtn';
 import EditTenant from './EditTenant';
 import './TenantList.css';
 import TenantRowSet from './TenantRowSet';
 
-export default function TenantList({ initTenants, onTenantsChanged }) {
+export default function TenantList({ tenantList, onTenantsChanged }) {
 
-    const [tenantList, setTenantListVariable] = useState(initTenants);
     const [showHidden, setShowHidden] = useState(false);
+    const [addingTenant, setAddingTenant] = useState(false);
 
     function setTenantList(newTenants) {
-        setTenantListVariable(newTenants);
-
-        if (onTenantsChanged)
-            onTenantsChanged(newTenants);
+        onTenantsChanged(newTenants);
     }
 
     function addNewTenant(tenantData) {
@@ -39,10 +37,10 @@ export default function TenantList({ initTenants, onTenantsChanged }) {
     function showOrHideTenant(id) {
         const newTenants = tenantList
             .map(t => t.id === id ? ({ ...t, newlyAdded: false, hidden: !t.hidden }) : t);
-        
+
         const hiddenTenantsCount = newTenants.filter(t => t.hidden).length;
-        if(hiddenTenantsCount === 0) setShowHidden(false);
-        
+        if (hiddenTenantsCount === 0) setShowHidden(false);
+
         setTenantList(newTenants);
     }
 
@@ -112,13 +110,18 @@ export default function TenantList({ initTenants, onTenantsChanged }) {
                     callbacks={rowSetCallbacks}
                 />}
 
-                <EditTenant 
-                    onSave={addNewTenant} 
+            
+                {addingTenant && <EditTenant
+                    onSave={addNewTenant}
                     forbiddenNames={tenantList.map(t => t.name)}
-                    tenantId={generateNewId()} />
+                    tenantId={generateNewId()}
+                    onCancel={() => setAddingTenant(false)}
+                />}
 
             </tbody>
         </table>
+
+        {!addingTenant && <AddNewBtn label={'Add New Tenant'} onClick={() => setAddingTenant(true)}/>}
 
     </div>;
 }

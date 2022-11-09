@@ -1,6 +1,8 @@
 import './EditTenant.css';
 import moment from "moment/moment";
 import { useState } from "react";
+import SaveBtn from '../../shared/components/SaveBtn';
+import CancelBtn from '../../shared/components/CancelBtn';
 
 function fromMomentToInputString(mmt) {
     return mmt ? mmt.format('YYYY-MM-DD') : '';
@@ -39,13 +41,13 @@ export default function EditTenant({ forbiddenNames = [], tenantData, tenantId, 
     function countDays() {
         if (newFrom === '' || (newTo === '' && newTillNow === false))
             return;
-        
+
         const from = toMoment(newFrom);
         const to = newTillNow ? moment() : moment(newTo);
-        
+
         return to.diff(from, 'days') + 1;
     }
-    
+
 
     const nameIsForbidden = forbiddenNames.filter(n => newName.trim() === n).length !== 0;
     const nameIsInvalidClass = nameIsForbidden ? 'invalid' : '';
@@ -97,10 +99,10 @@ export default function EditTenant({ forbiddenNames = [], tenantData, tenantId, 
             </div>
 
         </td>
-        <td><div className='mt-2'>{countDays()}</div></td>
+        <td><div>{countDays()}</div></td>
         <td>
-            <button type="button" className="btn btn-success" onClick={onSaveInternal} disabled={!correctlyFilled}>Save</button>
-            {onCancel && <button type="button" className="btn btn-danger ms-2" onClick={onCancel}>Cancel</button>}
+            <SaveBtn onClick={onSaveInternal} disabled={!correctlyFilled}/>
+            {onCancel && <CancelBtn onClick={onCancel}/>}
         </td>
     </tr>
 } 

@@ -1,53 +1,84 @@
 .bill-header {
-    background-color: var(--bs-gray-100);
-    cursor: pointer;
-    transition: 200ms ease-in-out;
+  cursor: pointer;
+  transition: 200ms ease-in-out;
 }
 
 .bill-header:hover {
-    background-color: var(--bs-gray-200);
+  background-color: var(--bs-gray-200);
+}
+
+.bill-header.bill-is-unpaid {
+    background-color: rgb(255, 230, 230);
     transition: 200ms ease-in-out;
+}
+
+.bill-header.bill-is-unpaid:hover {
+    background-color: rgb(253, 208, 208);
+    transition: 200ms ease-in-out;
+}
+
+.bill-header.bill-is-paid {
+  background-color: rgb(242, 255, 236);
+  transition: 200ms ease-in-out;
+}
+
+.bill-header.bill-is-paid:hover {
+  background-color: rgb(227, 255, 215);
+  transition: 200ms ease-in-out;
 }
 
 .bill-body-container {
-    overflow: hidden;
+  overflow: hidden;
 }
 
 .bill-body-hidden {
-    max-height: 0px;
-    transition: 200ms ease-in-out;
+  max-height: 0px;
+  transition: 200ms ease-in-out;
 }
 
 .bill-body-shown {
-    max-height: 800px;
-    transition: 800ms ease-in-out;
+  max-height: 800px;
+  transition: 800ms ease-in-out;
 }
 
 .date-in-title {
-    font-weight: lighter;
-    font-size: smaller;
+  font-weight: lighter;
+  font-size: smaller;
 
-    opacity: 0;
-    transition: 200ms ease-in-out;
+  opacity: 0;
+  transition: 200ms ease-in-out;
 }
 
 .date-in-title-hidden {
-    opacity: 1;
-    transition: 200ms ease-in-out;
-    transition-delay: 300ms;
+  opacity: 1;
+  transition: 200ms ease-in-out;
+  transition-delay: 300ms;
 }
 
 .tenant-paid {
-    box-shadow: 0px 1px 5px 3px var(--bs-green);
-    opacity: .5;
-    transition: 200ms ease-in;
+  box-shadow: 0px 1px 5px 3px var(--bs-green);
+  opacity: 0.5;
+  transition: 200ms ease-in;
 }
 
 .tenant-did-not-pay {
-    box-shadow: 0px 1px 5px 3px var(--bs-red);
-    transition: 200ms ease-in;
+  box-shadow: 0px 1px 5px 3px var(--bs-red);
+  transition: 200ms ease-in;
 }
 
 .tenant-bill-record {
-    cursor: pointer;
+  cursor: pointer;
+}
+
+.tenant-bill-record:hover {
+  scale: 1.05;
+}
+
+.tenant-bill-record.tenant-paid:hover {
+  background-color: rgb(237, 255, 230);
+  opacity: 0.8;
+}
+
+.tenant-bill-record.tenant-did-not-pay:hover {
+  background-color: rgb(255, 230, 230);
 }

@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { showDateFormat } from '../../constants';
 import countDays from '../../shared/count-days';
 import './Bill.css';
@@ -27,7 +27,8 @@ function getIntervalOverlap(interval1, interval2) {
 export default function Bill({ billData: { id, name, note, amount, from, to, payerIds }, hideBody = true, tenants, toggleTenantPaid }) {
 
     const [billIsHidden, setBillIsHidden] = useState(hideBody);
-
+    const [billIsUnpaid, setBillIsUnpaid] = useState(false);
+    
     const fromToString = `${from.format(showDateFormat)} - ${to.format(showDateFormat)}`;
 
     function generateBillsRecords() {
@@ -65,8 +66,20 @@ export default function Bill({ billData: { id, name, note, amount, from, to, pay
 
     const tenantRecords = generateBillsRecords();
 
+    useEffect(() => {
+        const tenantsUnpaidCount = tenantRecords.filter(t => !t.paid).length;
+        if (tenantsUnpaidCount !== 0)
+            setBillIsHidden(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+        const tenantsUnpaidCount = tenantRecords.filter(t => !t.paid).length;
+        setBillIsUnpaid(tenantsUnpaidCount !== 0);
+    }, [tenantRecords]);
+
     return <div className="card mb-3">
-        <h5 className="card-header bill-header" onClick={() => setBillIsHidden(!billIsHidden)}>
+        <h5 className={`card-header bill-header ${billIsUnpaid ? 'bill-is-unpaid' : 'bill-is-paid' }`} onClick={() => setBillIsHidden(!billIsHidden)}>
             {name}
             <span className={`date-in-title ms-3 ${billIsHidden ? 'date-in-title-hidden' : ''}`}>{fromToString}</span>
         </h5>
@@ -102,8 +115,8 @@ export default function Bill({ billData: { id, name, note, amount, from, to, pay
                 {tenantRecords.length !== 0 && <>
                     <h6 className="card-subtitle text-muted mt-2 mb-2">
                         Click on tenant to toggle
-                        <span class="ms-1 me-1 badge rounded-pill bg-success">Paid</span>/
-                        <span class="ms-1 badge rounded-pill bg-danger">Didn't pay</span>
+                        <span className="ms-1 me-1 badge rounded-pill bg-success">Paid</span>/
+                        <span className="ms-1 badge rounded-pill bg-danger">Didn't pay</span>
                     </h6>
                     <div className='row'>
                         {tenantRecords.map(tenantRecord => <div key={tenantRecord.id} className="col-md-auto" onClick={() => toggleTenantPaid(id, tenantRecord.id)}>
@@ -111,8 +124,8 @@ export default function Bill({ billData: { id, name, note, amount, from, to, pay
                                 <div className="card-body">
                                     <h5 className="card-title">{tenantRecord.name}
                                         {tenantRecord.paid
-                                            ? <span class="ms-2 badge rounded-pill bg-success">Paid</span>
-                                            : <span class="ms-2 badge rounded-pill bg-danger">Didn't pay</span>}
+                                            ? <span className="ms-2 badge rounded-pill bg-success">Paid</span>
+                                            : <span className="ms-2 badge rounded-pill bg-danger">Didn't pay</span>}
                                     </h5>
 
                                     <h6 className="card-subtitle mt-4 text-muted">Bill Interval</h6>

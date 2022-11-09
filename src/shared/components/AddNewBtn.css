@@ -1,0 +1,15 @@
+.add-new-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: max-content;
+  width: max-content;
+  padding: 0.3rem;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  transition: 200ms ease-in-out;
+}
+
+.plus {
+  scale: 1.5;
+}
