@@ -6,7 +6,7 @@ function fromMomentToInputString(mmt) {
     return mmt ? mmt.format('YYYY-MM-DD') : '';
 }
 
-export default function EditTenant({ forbiddenNames = [], tenantData, onSave, onCancel }) {
+export default function EditTenant({ forbiddenNames = [], tenantData, tenantId, onSave, onCancel }) {
 
     const [newName, setNewName] = useState(tenantData?.name ?? '');
     const [newFrom, setNewFrom] = useState(fromMomentToInputString(tenantData?.from));
@@ -19,6 +19,7 @@ export default function EditTenant({ forbiddenNames = [], tenantData, onSave, on
 
     function onSaveInternal(e) {
         onSave({
+            id: tenantId,
             name: newName.trim(),
             from: toMoment(newFrom),
             to: !newTillNow ? toMoment(newTo) : null,

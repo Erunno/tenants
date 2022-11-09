@@ -1,23 +1,11 @@
-import moment from 'moment/moment';
 import { useState } from 'react';
 import EditTenant from './EditTenant';
 import './TenantList.css';
 import TenantRowSet from './TenantRowSet';
 
-export default function TenantList({ onTenantsChanged }) {
+export default function TenantList({ initTenants, onTenantsChanged }) {
 
-    const testTenant1 = {
-        name: 'pepa',
-        from: moment(),
-        to: moment(),
-    };
-
-    const testTenant2 = {
-        name: 'pepca',
-        from: moment(),
-    };
-
-    const [tenantList, setTenantListVariable] = useState([testTenant1, testTenant2]);
+    const [tenantList, setTenantListVariable] = useState(initTenants);
     const [showHidden, setShowHidden] = useState(false);
 
     function setTenantList(newTenants) {
@@ -36,21 +24,21 @@ export default function TenantList({ onTenantsChanged }) {
         setTenantList(newTenants);
     }
 
-    function deleteTenant(name) {
-        setTenantList(tenantList.filter(t => t.name !== name));
+    function deleteTenant(id) {
+        setTenantList(tenantList.filter(t => t.id !== id));
     }
 
-    function setBeingEditted(value) {
-        return (name) => {
+    function setBeingEdited(value) {
+        return (id) => {
             const newTenants = tenantList
-                .map(t => t.name === name ? { ...t, beingEdited: value } : t);
+                .map(t => t.id === id ? { ...t, beingEdited: value } : t);
             setTenantList(newTenants);
         }
     }
 
-    function showOrHideTenant(name) {
+    function showOrHideTenant(id) {
         const newTenants = tenantList
-            .map(t => t.name === name ? ({ ...t, newlyAdded: false, hidden: !t.hidden }) : t);
+            .map(t => t.id === id ? ({ ...t, newlyAdded: false, hidden: !t.hidden }) : t);
         
         const hiddenTenantsCount = newTenants.filter(t => t.hidden).length;
         if(hiddenTenantsCount === 0) setShowHidden(false);
@@ -68,9 +56,9 @@ export default function TenantList({ onTenantsChanged }) {
         setShowHidden(!showHidden);
     }
 
-    function saveEditedTenant(name, newData) {
+    function saveEditedTenant(id, newData) {
         const newTenants = tenantList
-            .map(t => t.name === name ? newData : t)
+            .map(t => t.id === id ? newData : t)
             .sort((t1, t2) => t1.name > t2.name);
         setTenantList(newTenants);
     }
@@ -79,10 +67,14 @@ export default function TenantList({ onTenantsChanged }) {
     const hiddenTenants = tenantList.filter(t => t.hidden);
     const rowSetCallbacks = {
         onDelete: deleteTenant,
-        onEdit: setBeingEditted(true),
-        onCancelEdit: setBeingEditted(false),
+        onEdit: setBeingEdited(true),
+        onCancelEdit: setBeingEdited(false),
         onToggleHide: showOrHideTenant,
         onSaveEdited: saveEditedTenant,
+    }
+
+    function generateNewId() {
+        return Math.max(...tenantList.map(t => t.id)) + 1;
     }
 
     return <div className='tenant-list-container mt-3 mb-3'>
@@ -120,7 +112,10 @@ export default function TenantList({ onTenantsChanged }) {
                     callbacks={rowSetCallbacks}
                 />}
 
-                <EditTenant onSave={addNewTenant} forbiddenNames={tenantList.map(t => t.name)} />
+                <EditTenant 
+                    onSave={addNewTenant} 
+                    forbiddenNames={tenantList.map(t => t.name)}
+                    tenantId={generateNewId()} />
 
             </tbody>
         </table>
