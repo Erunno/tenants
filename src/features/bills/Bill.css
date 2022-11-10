@@ -8,13 +8,13 @@
 }
 
 .bill-header.bill-is-unpaid {
-    background-color: rgb(255, 230, 230);
-    transition: 200ms ease-in-out;
+  background-color: rgb(255, 230, 230);
+  transition: 200ms ease-in-out;
 }
 
 .bill-header.bill-is-unpaid:hover {
-    background-color: rgb(253, 208, 208);
-    transition: 200ms ease-in-out;
+  background-color: rgb(253, 208, 208);
+  transition: 200ms ease-in-out;
 }
 
 .bill-header.bill-is-paid {
@@ -32,13 +32,13 @@
 }
 
 .bill-body-hidden {
-  max-height: 0px;
-  transition: 200ms ease-in-out;
+  height: 0;
+  transition: 600ms ease-in-out;
 }
 
 .bill-body-shown {
-  max-height: 800px;
-  transition: 800ms ease-in-out;
+  height: fit-content;
+  transition: 600ms ease-in-out;
 }
 
 .date-in-title {
