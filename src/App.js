@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import moment from 'moment/moment';
 import { storageDateFormat } from './constants';
 import './shared/styles/global.css';
+import logo from './pictures/favicon.ico';
 
 const BILLS_KEY = '__bills__';
 const TENANTS_KEY = '__tenants__';
@@ -64,36 +65,36 @@ function App() {
 
   useEffect(() => {
     const storage = loadAppState();
-    
+
     setTenants(storage.tenants);
     setBills(storage.bills);
-  }, []);   
+  }, []);
 
   function minusArr(arr1, arr2) {
     return arr1.filter(i1 => !arr2.includes(i1));
   }
-  
+
   function onTenantsChanged(newTenants) {
     const removedTenantsIds = minusArr(tenants.map(t => t.id), newTenants.map(t => t.id));
-    
+
     let newBills = bills;
     if (removedTenantsIds.length !== 0) {
       newBills = bills.map(b => ({
         ...b,
         payerIds: b.payerIds?.filter(id => !removedTenantsIds.some(remId => remId === id)) ?? []
       }))
-      
+
       setBills(newBills);
     }
 
     setTenants(newTenants);
-    
+
     saveState(newBills, newTenants);
   }
 
   function onBillsChanged(newBills) {
     setBills(newBills);
-  console.log('hie');
+    console.log('hie');
 
 
     saveState(newBills, tenants);
@@ -102,7 +103,10 @@ function App() {
   return (
     <div className='app-container'>
       <nav className="navbar navbar-light bg-light">
-        <div className="navbar-brand ms-3">Bills manager</div>
+        <div className="navbar-brand brand-container ms-3 mt-auto mb-auto">
+          <img src={logo} className="logo-in-nav" alt="logo" />
+          <div className='ms-2'>Bills manager</div>
+        </div>
       </nav>
       <div className='container'>
         {tenants && <TenantList tenantList={tenants} onTenantsChanged={onTenantsChanged} />}

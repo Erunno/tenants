@@ -1,8 +1,6 @@
 import './EditTenant.css';
 import moment from "moment/moment";
 import { useState } from "react";
-import SaveBtnSmall from '../../shared/components/btns/SaveBtnSmall';
-import CancelBtnSmall from '../../shared/components/btns/CancelBtnSmall';
 import CancelBtn from '../../shared/components/btns/CancelBtn';
 import SaveBtn from '../../shared/components/btns/SaveBtn';
 
