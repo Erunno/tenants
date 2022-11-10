@@ -1,4 +1,4 @@
-@keyframes animate-hight-in {
+@keyframes animate-table-row-height-in {
   0% {
     max-height: 0px;
   }
@@ -7,16 +7,12 @@
   }
 }
 
-tbody tr.newly-added-tenant-row th > div,
 tbody tr.newly-added-tenant-row td > div {
   overflow: hidden;
-  animation: 600ms ease-in-out 0s 1 animate-hight-in;
+
+  animation: 600ms ease-in-out 0s 1 animate-table-row-height-in;
 }
 
-tbody tr td,
-tbody tr th {
-  transition: ease-in-out 200ms;
-}
 
 .edit-btn {
   color: var(--bs-green);

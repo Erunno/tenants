@@ -19,7 +19,7 @@ td.show-hidden-row:hover {
     text-align: center;
 }
 
-@keyframes animate-hight-in {
+@keyframes animate-hide-btn-height-in {
     0% {
         max-height: 0px;
     }
@@ -29,5 +29,5 @@ td.show-hidden-row:hover {
 } 
 
 .show-hidden-row div {
-    animation: 600ms ease-in-out 0s 1 animate-hight-in;
+    animation: 600ms ease-in-out 0s 1 animate-hide-btn-height-in;
 }
