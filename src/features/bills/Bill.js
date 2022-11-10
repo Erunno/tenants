@@ -153,7 +153,11 @@ export default function Bill({ billData: { id, name, note, amount, from, to, pay
 
                 <div className="btns-container">
                     <EditBtn label={'Edit Bill'} onClick={() => onEdit(id)} />
-                    <DeleteBtn label={'Delete Bill'} onClick={() => onDelete(id)} />
+                    <DeleteBtn
+                        label={'Delete Bill'}
+                        onClick={() => onDelete(id)}
+                        confirmDeleteMessage={`Do you want to delete bill "${name}"?`}
+                    />
                 </div>
             </div>
         </div>
