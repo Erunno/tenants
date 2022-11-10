@@ -6,6 +6,7 @@ import BillList from './features/bills/BillList';
 import { useEffect, useState } from 'react';
 import moment from 'moment/moment';
 import { storageDateFormat } from './constants';
+import './shared/styles/global.css';
 
 const BILLS_KEY = '__bills__';
 const TENANTS_KEY = '__tenants__';
@@ -39,6 +40,7 @@ function toStorageBill(bill) {
     ...bill,
     from: bill.from.format(storageDateFormat),
     to: bill.to.format(storageDateFormat),
+    payerIds: bill.payerIds ?? [],
   }
 }
 
@@ -78,7 +80,7 @@ function App() {
     if (removedTenantsIds.length !== 0) {
       newBills = bills.map(b => ({
         ...b,
-        payerIds: b.payerIds.filter(id => !removedTenantsIds.some(remId => remId === id))
+        payerIds: b.payerIds?.filter(id => !removedTenantsIds.some(remId => remId === id)) ?? []
       }))
       
       setBills(newBills);

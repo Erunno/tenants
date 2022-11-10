@@ -1,8 +1,8 @@
 import './EditTenant.css';
 import moment from "moment/moment";
 import { useState } from "react";
-import SaveBtnSmall from '../../shared/components/SaveBtnSmall';
-import CancelBtnSmall from '../../shared/components/CancelBtnSmall';
+import SaveBtnSmall from '../../shared/components/btns/SaveBtnSmall';
+import CancelBtnSmall from '../../shared/components/btns/CancelBtnSmall';
 
 function fromMomentToInputString(mmt) {
     return mmt ? mmt.format('YYYY-MM-DD') : '';
@@ -65,7 +65,7 @@ export default function EditTenant({ forbiddenNames = [], tenantData, tenantId, 
             <div className='row'>
                 <div className='col-10'>
                     <input type="text" id="tenant-name-input" className={`form-control ${nameIsInvalidClass}`} value={newName} onChange={e => setNewName(e.target.value)} />
-                    {nameIsForbidden && <div className="name-is-forbidden-error-message">
+                    {nameIsForbidden && <div className="error-message">
                         Name is already taken (Hidden tenant can be already named "{newName.trim()}")
                     </div>}
                 </div>

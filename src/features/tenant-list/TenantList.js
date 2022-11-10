@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import AddNewBtn from '../../shared/components/AddNewBtn';
+import AddNewBtn from '../../shared/components/btns/AddNewBtn';
 import EditTenant from './EditTenant';
 import './TenantList.css';
 import TenantRowSet from './TenantRowSet';
@@ -29,7 +29,7 @@ export default function TenantList({ tenantList, onTenantsChanged }) {
     function setBeingEdited(value) {
         return (id) => {
             const newTenants = tenantList
-                .map(t => t.id === id ? { ...t, beingEdited: value } : t);
+                .map(t => t.id === id ? { ...t, beingEdited: value ? value : undefined } : t);
             setTenantList(newTenants);
         }
     }
@@ -72,7 +72,7 @@ export default function TenantList({ tenantList, onTenantsChanged }) {
     }
 
     function generateNewId() {
-        return Math.max(...tenantList.map(t => t.id)) + 1;
+        return Math.max(...tenantList.filter(t => t).map(t => t.id).concat([-1])) + 1;
     }
 
     return <div className='tenant-list-container mt-3 mb-3'>

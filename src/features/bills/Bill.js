@@ -1,7 +1,8 @@
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { showDateFormat } from '../../constants';
-import DeleteBtn from '../../shared/components/DeleteBtn';
+import DeleteBtn from '../../shared/components/btns/DeleteBtn';
+import EditBtn from '../../shared/components/btns/EditBtn';
 import countDays from '../../shared/count-days';
 import './Bill.css';
 
@@ -25,11 +26,11 @@ function getIntervalOverlap(interval1, interval2) {
     return scd;
 }
 
-export default function Bill({ billData: { id, name, note, amount, from, to, payerIds }, hideBody = true, tenants, toggleTenantPaid }) {
+export default function Bill({ billData: { id, name, note, amount, from, to, payerIds }, hideBody = true, tenants, toggleTenantPaid, onDelete, onEdit }) {
 
     const [billIsHidden, setBillIsHidden] = useState(hideBody);
     const [billIsUnpaid, setBillIsUnpaid] = useState(false);
-    
+
     const fromToString = `${from.format(showDateFormat)} - ${to.format(showDateFormat)}`;
 
     function generateBillsRecords() {
@@ -49,7 +50,7 @@ export default function Bill({ billData: { id, name, note, amount, from, to, pay
                     billedFrom: billInterval.from,
                     billedTo: billInterval.to,
                     days: countDays(billInterval.from, billInterval.to),
-                    paid: payerIds.filter(id => id === t.id).length !== 0,
+                    paid: payerIds?.filter(id => id === t.id).length !== 0 ?? undefined,
                 }
             })
             .filter(rec => rec);
@@ -71,7 +72,7 @@ export default function Bill({ billData: { id, name, note, amount, from, to, pay
         const tenantsUnpaidCount = tenantRecords.filter(t => !t.paid).length;
         if (tenantsUnpaidCount !== 0)
             setBillIsHidden(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -80,7 +81,7 @@ export default function Bill({ billData: { id, name, note, amount, from, to, pay
     }, [tenantRecords]);
 
     return <div className="card mb-3">
-        <h5 className={`card-header bill-header ${billIsUnpaid ? 'bill-is-unpaid' : 'bill-is-paid' }`} onClick={() => setBillIsHidden(!billIsHidden)}>
+        <h5 className={`card-header bill-header ${billIsUnpaid ? 'bill-is-unpaid' : 'bill-is-paid'}`} onClick={() => setBillIsHidden(!billIsHidden)}>
             {name}
             <span className={`date-in-title ms-3 ${billIsHidden ? 'date-in-title-hidden' : ''}`}>{fromToString}</span>
         </h5>
@@ -108,10 +109,10 @@ export default function Bill({ billData: { id, name, note, amount, from, to, pay
                 <h5 className="card-subtitle">Tenants</h5>
 
 
-                {tenantRecords.length === 0 && 
-                <h6 className="card-subtitle text-muted mt-2 mb-2">
-                    No tenants in billing interval
-                </h6>}
+                {tenantRecords.length === 0 &&
+                    <h6 className="card-subtitle text-muted mt-2 mb-2">
+                        No tenants in billing interval
+                    </h6>}
 
                 {tenantRecords.length !== 0 && <>
                     <h6 className="card-subtitle text-muted mt-2 mb-2">
@@ -150,8 +151,10 @@ export default function Bill({ billData: { id, name, note, amount, from, to, pay
 
                 <div className="mt-4"></div>
 
-                <DeleteBtn label={'Delete Bill'}/>
-
+                <div className="btns-container">
+                    <EditBtn label={'Edit Bill'} onClick={() => onEdit(id)} />
+                    <DeleteBtn label={'Delete Bill'} onClick={() => onDelete(id)} />
+                </div>
             </div>
         </div>
     </div>

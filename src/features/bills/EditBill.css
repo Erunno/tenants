@@ -8,10 +8,6 @@
     max-width: 30rem;
 }
 
-.bill-edit-btn-container {
-    display: flex;
-}
-
 .note-note {
     font-size: small;
     font-weight: 200;
