@@ -8,6 +8,19 @@ function fromMomentToInputString(mmt) {
     return mmt ? mmt.format('YYYY-MM-DD') : '';
 }
 
+function compareNameTo(otherName) {
+
+    const norm = str => str
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toUpperCase()
+        .trim();
+
+    const normOtherName = norm(otherName);
+
+    return (name) => normOtherName === norm(name);
+}
+
 export default function EditTenant({ forbiddenNames = [], tenantData, tenantId, onSave, onCancel }) {
 
     const [newName, setNewName] = useState(tenantData?.name ?? '');
@@ -49,7 +62,7 @@ export default function EditTenant({ forbiddenNames = [], tenantData, tenantId, 
     }
 
 
-    const nameIsForbidden = forbiddenNames.filter(n => newName.trim() === n).length !== 0;
+    const nameIsForbidden = forbiddenNames.some(compareNameTo(newName));
     const nameIsInvalidClass = nameIsForbidden ? 'invalid' : '';
 
     const correctlyFilled = (
@@ -101,8 +114,8 @@ export default function EditTenant({ forbiddenNames = [], tenantData, tenantId, 
         </td>
         <td><div>{countDays()}</div></td>
         <td>
-            <SaveBtnSmall onClick={onSaveInternal} disabled={!correctlyFilled}/>
-            {onCancel && <CancelBtnSmall onClick={onCancel}/>}
+            <SaveBtnSmall onClick={onSaveInternal} disabled={!correctlyFilled} />
+            {onCancel && <CancelBtnSmall onClick={onCancel} />}
         </td>
     </tr>
 } 

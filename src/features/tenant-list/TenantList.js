@@ -77,7 +77,7 @@ export default function TenantList({ tenantList, onTenantsChanged }) {
 
     return <div className='tenant-list-container mt-3 mb-3'>
 
-        <h1>Tenant List</h1>
+        <h1>Tenants</h1>
 
         <table className='table mt-4'>
             <thead>
