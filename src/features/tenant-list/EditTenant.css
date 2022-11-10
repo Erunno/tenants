@@ -1,2 +1,14 @@
+.to-edit-tenant {
+  display: flex;
+  vertical-align: middle;
+}
 
-
+.tenants-name-input {
+  max-width: 30rem;
+}
+.tenant-edit-row {
+  background-color: var(--bs-gray-100);
+}
+td.tenant-edit-row-td {
+  padding: 0;
+}

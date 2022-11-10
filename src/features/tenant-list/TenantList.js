@@ -82,7 +82,6 @@ export default function TenantList({ tenantList, onTenantsChanged }) {
         <table className='table mt-4'>
             <thead>
                 <tr>
-                    <th scope="col">#</th>
                     <th scope="col">Name</th>
                     <th scope="col">From</th>
                     <th scope="col">To</th>
@@ -105,12 +104,11 @@ export default function TenantList({ tenantList, onTenantsChanged }) {
 
                 {showHidden && <TenantRowSet
                     tenants={hiddenTenants}
-                    offset={shownTenants.length}
                     allNames={tenantList.map(t => t.name)}
                     callbacks={rowSetCallbacks}
                 />}
 
-            
+
                 {addingTenant && <EditTenant
                     onSave={addNewTenant}
                     forbiddenNames={tenantList.map(t => t.name)}
@@ -121,7 +119,7 @@ export default function TenantList({ tenantList, onTenantsChanged }) {
             </tbody>
         </table>
 
-        {!addingTenant && <AddNewBtn label={'Add New Tenant'} onClick={() => setAddingTenant(true)}/>}
+        {!addingTenant && <AddNewBtn label={'Add New Tenant'} onClick={() => setAddingTenant(true)} />}
 
     </div>;
 }
