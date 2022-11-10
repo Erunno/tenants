@@ -19,6 +19,7 @@ export default function TenantList({ tenantList, onTenantsChanged }) {
             .concat([{ ...tenantData, newlyAdded: true }])
             .sort((t1, t2) => t1.name > t2.name);
 
+        setAddingTenant(false);
         setTenantList(newTenants);
     }
 
@@ -78,46 +79,47 @@ export default function TenantList({ tenantList, onTenantsChanged }) {
     return <div className='tenant-list-container mt-3 mb-3'>
 
         <h1>Tenants</h1>
+        <div className='tenant-table-container'>
+            <table className='table mt-4'>
+                <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">From</th>
+                        <th scope="col">To</th>
+                        <th scope="col">Days</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <TenantRowSet
+                        tenants={shownTenants}
+                        allNames={tenantList.map(t => t.name)}
+                        callbacks={rowSetCallbacks}
+                    />
 
-        <table className='table mt-4'>
-            <thead>
-                <tr>
-                    <th scope="col">Name</th>
-                    <th scope="col">From</th>
-                    <th scope="col">To</th>
-                    <th scope="col">Days</th>
-                    <th scope="col">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <TenantRowSet
-                    tenants={shownTenants}
-                    allNames={tenantList.map(t => t.name)}
-                    callbacks={rowSetCallbacks}
-                />
+                    {(hiddenTenants.length !== 0) && <tr>
+                        <td colSpan='6' className='show-hidden-row' onClick={toggleHiddenTenants}>
+                            <div className='show-hidden'>{showHidden ? 'Hide' : 'Show hidden'} tenants</div>
+                        </td>
+                    </tr>}
 
-                {(hiddenTenants.length !== 0) && <tr>
-                    <td colSpan='6' className='show-hidden-row' onClick={toggleHiddenTenants}>
-                        <div className='show-hidden'>{showHidden ? 'Hide' : 'Show hidden'} tenants</div>
-                    </td>
-                </tr>}
-
-                {showHidden && <TenantRowSet
-                    tenants={hiddenTenants}
-                    allNames={tenantList.map(t => t.name)}
-                    callbacks={rowSetCallbacks}
-                />}
+                    {showHidden && <TenantRowSet
+                        tenants={hiddenTenants}
+                        allNames={tenantList.map(t => t.name)}
+                        callbacks={rowSetCallbacks}
+                    />}
 
 
-                {addingTenant && <EditTenant
-                    onSave={addNewTenant}
-                    forbiddenNames={tenantList.map(t => t.name)}
-                    tenantId={generateNewId()}
-                    onCancel={() => setAddingTenant(false)}
-                />}
+                    {addingTenant && <EditTenant
+                        onSave={addNewTenant}
+                        forbiddenNames={tenantList.map(t => t.name)}
+                        tenantId={generateNewId()}
+                        onCancel={() => setAddingTenant(false)}
+                    />}
 
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
 
         {!addingTenant && <AddNewBtn label={'Add New Tenant'} onClick={() => setAddingTenant(true)} />}
 

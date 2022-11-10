@@ -1,3 +1,7 @@
+.tenant-table-container {
+    width: 100%;
+    overflow-x: auto;
+}
 
 td.show-hidden-row {
     background-color: var(--bs-gray-100);
