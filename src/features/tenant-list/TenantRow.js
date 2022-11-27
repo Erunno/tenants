@@ -23,7 +23,7 @@ export default function TenantRow({ tenantData, onEdit, onDelete, onToggleHidden
                     onClick={onDelete}
                     smallVersion={true}
                     label={'Delete Tenant'}
-                    confirmDeleteMessage={`Do you want to delete tenant "${tenantData.name}"?`}
+                    confirmDeleteMessage={`Do you want to delete flatmate "${tenantData.name}"?`}
                 />
 
                 <span className="hide-show-btn ms-1 mt-auto mb-auto" onClick={onToggleHidden}>{tenantData.hidden ? 'Show' : 'Hide'}</span>

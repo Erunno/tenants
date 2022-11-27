@@ -106,17 +106,16 @@ export default function Bill({ billData: { id, name, note, amount, from, to, pay
                     </div>}
                 </div>
 
-                <h5 className="card-subtitle">Tenants</h5>
-
+                <h5 className="card-subtitle">Flatmates</h5>
 
                 {tenantRecords.length === 0 &&
                     <h6 className="card-subtitle text-muted mt-2 mb-2">
-                        No tenants in billing interval
+                        No flatmates in billing interval
                     </h6>}
 
                 {tenantRecords.length !== 0 && <>
                     <h6 className="card-subtitle text-muted mt-2 mb-2">
-                        Click on tenant to toggle
+                        Click on flatmate to toggle
                         <span className="ms-1 me-1 badge rounded-pill bg-success">Paid</span>/
                         <span className="ms-1 badge rounded-pill bg-danger">Didn't pay</span>
                     </h6>

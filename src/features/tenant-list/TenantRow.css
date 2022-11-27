@@ -13,7 +13,6 @@ tbody tr.newly-added-tenant-row td > div {
   animation: 600ms ease-in-out 0s 1 animate-table-row-height-in;
 }
 
-
 .edit-btn {
   color: var(--bs-green);
   cursor: pointer;
@@ -29,5 +28,5 @@ tbody tr.newly-added-tenant-row td > div {
 }
 
 td {
-    vertical-align: middle;
+  vertical-align: middle;
 }

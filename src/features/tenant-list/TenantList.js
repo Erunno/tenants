@@ -78,7 +78,7 @@ export default function TenantList({ tenantList, onTenantsChanged }) {
 
     return <div className='tenant-list-container mt-3 mb-3'>
 
-        <h1>Tenants</h1>
+        <h1>Flatmates</h1>
         <div className='tenant-table-container'>
             <table className='table mt-4'>
                 <thead>
@@ -121,7 +121,7 @@ export default function TenantList({ tenantList, onTenantsChanged }) {
             </table>
         </div>
 
-        {!addingTenant && <AddNewBtn label={'Add New Tenant'} onClick={() => setAddingTenant(true)} />}
+        {!addingTenant && <AddNewBtn label={'Add New Flatmate'} onClick={() => setAddingTenant(true)} />}
 
     </div>;
 }
