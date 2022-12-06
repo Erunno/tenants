@@ -8,6 +8,7 @@ import moment from 'moment/moment';
 import { storageDateFormat } from './constants';
 import './shared/styles/global.css';
 import logo from './pictures/favicon.ico';
+import { GroupSelector } from './features/group-selector/GroupSelector';
 
 const BILLS_KEY = '__bills__';
 const TENANTS_KEY = '__tenants__';
@@ -62,6 +63,13 @@ function App() {
 
   const [tenants, setTenants] = useState(null);
   const [bills, setBills] = useState(null);
+  const [groups, setGroups] = useState([
+    { id: 1, name: "Group 1", selected: false },
+    { id: 2, name: "Group 1", selected: true },
+    { id: 3, name: "Group 1", selected: false },
+    { id: 4, name: "Group 1", selected: false },
+  ]);
+  const [selectedGroupId, setSelectedGroupId] = useState(groups[0].id);
 
   useEffect(() => {
     const storage = loadAppState();
@@ -94,9 +102,6 @@ function App() {
 
   function onBillsChanged(newBills) {
     setBills(newBills);
-    console.log('hie');
-
-
     saveState(newBills, tenants);
   }
 
@@ -109,7 +114,14 @@ function App() {
         </div>
       </nav>
       <div className='container'>
+        {groups && <GroupSelector
+          groups={groups}
+          onGroupsChanged={(g) => setGroups(g)}
+          selectedGroupId={selectedGroupId}
+          onSelectedChanged={setSelectedGroupId} />}
+
         {tenants && <TenantList tenantList={tenants} onTenantsChanged={onTenantsChanged} />}
+
         {bills && <BillList tenants={tenants} billList={bills} onBillsChanged={onBillsChanged} />}
       </div>
     </div>
