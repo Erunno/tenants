@@ -12,6 +12,8 @@ import { GroupSelector } from './features/group-selector/GroupSelector';
 
 const BILLS_KEY = '__bills__';
 const TENANTS_KEY = '__tenants__';
+const GROUPS_KEY = '__groups__';
+const INIT_GROUP_NAME = '⚡ My Group ⚡';
 
 function fromStorageBill(stBill) {
   return {
@@ -30,11 +32,61 @@ function fromStorageTenant(stTenant) {
   }
 }
 
-function loadAppState() {
-  return {
-    bills: (JSON.parse(localStorage.getItem(BILLS_KEY)) ?? []).map(fromStorageBill),
-    tenants: (JSON.parse(localStorage.getItem(TENANTS_KEY)) ?? []).map(fromStorageTenant),
-  }
+function loadLegacyData() {
+  if (!localStorage.getItem(TENANTS_KEY))
+    return null;
+
+  const serializedTenants = localStorage.getItem(TENANTS_KEY);
+  const serializedBills = localStorage.getItem(BILLS_KEY);
+
+  const tenants = (JSON.parse(serializedTenants) ?? []).map(fromStorageTenant);
+  const bills = (JSON.parse(serializedBills) ?? []).map(fromStorageBill);
+
+  localStorage.setItem(TENANTS_KEY + 'LEGACY__v1', serializedTenants);
+  localStorage.setItem(BILLS_KEY + 'LEGACY__v1', serializedBills);
+  localStorage.removeItem(TENANTS_KEY);
+  localStorage.removeItem(BILLS_KEY);
+
+  const groups = [{
+    id: 0,
+    name: INIT_GROUP_NAME,
+    tenants,
+    bills,
+  }];
+
+  saveState(groups);
+
+  return groups;
+}
+
+function getInitialStateOfApp() {
+  return [{
+    id: 0,
+    name: INIT_GROUP_NAME,
+    tenants: [],
+    bills: [],
+  }];
+}
+
+function loadGroups() {
+  const legacyData = loadLegacyData();
+  console.log(legacyData);
+  if (legacyData)
+    return legacyData;
+
+  const partiallyDeserializedGroups = JSON.parse(
+    localStorage.getItem(GROUPS_KEY)
+  );
+
+  if (!partiallyDeserializedGroups) return getInitialStateOfApp();
+
+  const savedData = partiallyDeserializedGroups.map(g => ({
+    ...g,
+    tenants: (JSON.parse(g.tenants) ?? []).map(fromStorageTenant),
+    bills: (JSON.parse(g.bills) ?? []).map(fromStorageBill),
+  }));
+
+  return savedData.length !== 0 ? savedData : getInitialStateOfApp();
 }
 
 function toStorageBill(bill) {
@@ -54,35 +106,70 @@ function toStorageTenant(tenant) {
   }
 }
 
-function saveState(bills, tenants) {
-  localStorage.setItem(BILLS_KEY, JSON.stringify(bills.map(toStorageBill)));
-  localStorage.setItem(TENANTS_KEY, JSON.stringify(tenants.map(toStorageTenant)));
+function saveState(groups) {
+  const serializedGroups = JSON.stringify(
+    groups.map(g => ({
+      ...g,
+      tenants: JSON.stringify(g.tenants.map(toStorageTenant)),
+      bills: JSON.stringify(g.bills.map(toStorageBill))
+    }))
+  )
+
+  localStorage.setItem(GROUPS_KEY, serializedGroups);
 }
 
 function App() {
 
-  const [tenants, setTenants] = useState(null);
-  const [bills, setBills] = useState(null);
-  const [groups, setGroups] = useState([
-    { id: 1, name: "Group 1", selected: false },
-    { id: 2, name: "Group 1", selected: true },
-    { id: 3, name: "Group 1", selected: false },
-    { id: 4, name: "Group 1", selected: false },
-  ]);
-  const [selectedGroupId, setSelectedGroupId] = useState(groups[0].id);
+  const [groups, setGroups] = useState([]);
+  const [selectedGroupId, setSelectedGroupId] = useState(null);
 
   useEffect(() => {
-    const storage = loadAppState();
+    const storedGroups = loadGroups();
 
-    setTenants(storage.tenants);
-    setBills(storage.bills);
+    setGroups(storedGroups);
+
+    if (storedGroups.length !== 0)
+      setSelectedGroupId(storedGroups[0].id);
+
   }, []);
+
+  function onGroupsChanged(newGroups) {
+    if (newGroups.length === 0)
+      newGroups = getInitialStateOfApp();
+
+    const selectedGroupHasBeenDeleted = !newGroups.some(g => g.id === selectedGroupId);
+
+    if (!selectedGroupId || selectedGroupHasBeenDeleted)
+      setSelectedGroupId(newGroups[0].id);
+
+    setGroups(newGroups);
+    saveState(newGroups);
+  }
 
   function minusArr(arr1, arr2) {
     return arr1.filter(i1 => !arr2.includes(i1));
   }
 
+  function updateSelectedGroup(tenants, bills) {
+    const currentGroup = groups.find(g => g.id === selectedGroupId);
+
+    const updatedGroup = {
+      ...currentGroup,
+      tenants: tenants,
+      bills: bills
+    };
+
+    const newGroups = groups.map(g => g.id === selectedGroupId ? updatedGroup : g);
+    setGroups(newGroups);
+
+    saveState(newGroups);
+  }
+
   function onTenantsChanged(newTenants) {
+    const currentGroup = groups.find(g => g.id === selectedGroupId);
+    const tenants = currentGroup.tenants;
+    const bills = currentGroup.bills;
+
     const removedTenantsIds = minusArr(tenants.map(t => t.id), newTenants.map(t => t.id));
 
     let newBills = bills;
@@ -91,19 +178,19 @@ function App() {
         ...b,
         payerIds: b.payerIds?.filter(id => !removedTenantsIds.some(remId => remId === id)) ?? []
       }))
-
-      setBills(newBills);
     }
 
-    setTenants(newTenants);
-
-    saveState(newBills, newTenants);
+    updateSelectedGroup(newTenants, newBills);
   }
 
   function onBillsChanged(newBills) {
-    setBills(newBills);
-    saveState(newBills, tenants);
+    const currentGroup = groups.find(g => g.id === selectedGroupId);
+    const tenants = currentGroup.tenants;
+
+    updateSelectedGroup(tenants, newBills)
   }
+
+  const currentGroup = groups?.find(g => g.id === selectedGroupId);
 
   return (
     <div className='app-container'>
@@ -116,13 +203,17 @@ function App() {
       <div className='container'>
         {groups && <GroupSelector
           groups={groups}
-          onGroupsChanged={(g) => setGroups(g)}
+          onGroupsChanged={onGroupsChanged}
           selectedGroupId={selectedGroupId}
           onSelectedChanged={setSelectedGroupId} />}
 
-        {tenants && <TenantList tenantList={tenants} onTenantsChanged={onTenantsChanged} />}
+        {groups && groups.length !== 0 &&
+          <TenantList tenantList={currentGroup.tenants} onTenantsChanged={onTenantsChanged} />
+        }
 
-        {bills && <BillList tenants={tenants} billList={bills} onBillsChanged={onBillsChanged} />}
+        {groups && groups.length !== 0 &&
+          <BillList tenants={currentGroup.tenants} billList={currentGroup.bills} onBillsChanged={onBillsChanged} />
+        }
       </div>
     </div>
   );

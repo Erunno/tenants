@@ -4,7 +4,7 @@ import './DeleteBtn.css';
 
 export default function DeleteBtn({ onClick, label, confirmDeleteMessage, smallVersion }) {
     const [showModal, setShowModal] = useState(false);
-    
+
     return <>
         {smallVersion
             ? <span className="delete-btn me-1 p-1" onClick={() => setShowModal(true)}>
@@ -23,11 +23,11 @@ export default function DeleteBtn({ onClick, label, confirmDeleteMessage, smallV
 
         {showModal && <div className="delete-overlay">
 
-            <div class="card delete-modal-card mt-4 ms-4 me-4">
-                <h5 class="card-header pt-3 pb-3">Confirm Deletion</h5>
-                <div class="card-body">
+            <div className="card delete-modal-card mt-4 ms-4 me-4">
+                <h5 className="card-header pt-3 pb-3">Confirm Deletion</h5>
+                <div className="card-body">
 
-                    <p class="card-text mb-4 ps-3 pe-3">{confirmDeleteMessage ?? 'Do you really want to delete item?'}</p>
+                    <p className="card-text mb-4 ps-3 pe-3">{confirmDeleteMessage ?? 'Do you really want to delete item?'}</p>
                     <hr />
 
                     <div className="btns-container">
@@ -39,7 +39,7 @@ export default function DeleteBtn({ onClick, label, confirmDeleteMessage, smallV
                             </svg>
                             <span className="delete-label ms-1">{label}</span>
                         </span>
-                        <CancelBtn label={'Cancel'} onClick={() => setShowModal(false)}/>
+                        <CancelBtn label={'Cancel'} onClick={() => setShowModal(false)} />
                     </div>
                 </div>
             </div>

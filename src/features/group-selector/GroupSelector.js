@@ -1,7 +1,7 @@
 import "./GroupSelector.css";
 import AddNewBtn from '../../shared/components/btns/AddNewBtn';
 import EditBtn from "../../shared/components/btns/EditBtn";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import SaveBtn from "../../shared/components/btns/SaveBtn";
 import CancelBtn from "../../shared/components/btns/CancelBtn";
 import DeleteBtn from "../../shared/components/btns/DeleteBtn";
@@ -11,9 +11,9 @@ export function GroupSelector({ groups, onGroupsChanged, selectedGroupId, onSele
     const [addingNew, setAddingNew] = useState(false);
     const [editingGroups, setEditingGroups] = useState(false);
     const [tmpGroupsForEdit, setTmpGroupsForEdit] = useState([]);
+    const newGroupNameInput = useRef(null);
 
     function clickedOnEdit() {
-
         const newTmpGroups = groups.map(g => ({
             id: g.id,
             name: g.name
@@ -27,25 +27,38 @@ export function GroupSelector({ groups, onGroupsChanged, selectedGroupId, onSele
 
     function onDeletedGroup(groupId) {
         return () => {
-
             const newGroups = groups
                 .filter(g => g.id !== groupId)
                 .map(g => ({ ...g }));
 
-            onGroupsChanged(newGroups);
             setEditingGroups(false);
+            onGroupsChanged(newGroups);
         }
     }
 
-    function onAddNewGroup(groupName) {
+    function onAddNewGroup() {
+        const name = newGroupNameInput.current.value;
+        const id = groups.length !== 0
+            ? Math.max(...groups.map(g => g.id)) + 1
+            : 0;
 
+
+        const newGroups = [...groups, { id, name, tenants: [], bills: [] }];
+
+        setAddingNew(false);
+        onGroupsChanged(newGroups);
     }
 
     function saveEditedGroups() {
-        onGroupsChanged(tmpGroupsForEdit.map(g => ({
-            id: g.id,
-            name: g.name
-        })));
+
+        onGroupsChanged(tmpGroupsForEdit.map(g => {
+            const oldGroup = groups.filter(x => x.id === g.id)[0];
+
+            return {
+                ...oldGroup,
+                name: g.name,
+            };
+        }));
         setEditingGroups(false);
     }
 
@@ -57,20 +70,23 @@ export function GroupSelector({ groups, onGroupsChanged, selectedGroupId, onSele
                 <div className="group-title-btn-container me-1">
                     <AddNewBtn label={"Add"} onClick={() => setAddingNew(true)} />
                 </div>
-                <div className="group-title-btn-container">
-                    <EditBtn label={"Edit"} onClick={clickedOnEdit} />
-                </div>
+
+                {groups.length !== 0 &&
+                    <div className="group-title-btn-container">
+                        <EditBtn label={"Edit"} onClick={clickedOnEdit} secondaryColor={true} />
+                    </div>
+                }
             </>
             }
         </div>
 
-        {!editingGroups && <div className="group-row-container mt-3 mb-4">
+        {!editingGroups && groups.length !== 0 && <div className="group-row-container mt-3">
 
             {groups.map(g => {
 
-                let cssClasses = "group-option btn ";
-                if (g.id === selectedGroupId)
-                    cssClasses += "selected-group";
+                const cssClasses = g.id === selectedGroupId
+                    ? "btn me-1 btn-success"
+                    : "btn me-1 btn-outline-secondary";
 
                 return <div
                     key={g.id}
@@ -122,13 +138,13 @@ export function GroupSelector({ groups, onGroupsChanged, selectedGroupId, onSele
         </div>}
 
         {
-            addingNew && <div className="add-new-group-container">
+            addingNew && <div className="add-new-group-container mt-3">
                 <div className="container pt-2 pb-3">
                     <label className="form-check-label me-2 mt-auto mb-auto" htmlFor="tenant-name-2">Name</label>
-                    <input type="text" className="mt-2 mb-3 form-control" />
+                    <input ref={newGroupNameInput} type="text" className="mt-2 mb-3 form-control" />
 
                     <div className="new-group-btn-row mt-4">
-                        <SaveBtn label={'Save Group'} />
+                        <SaveBtn label={'Save Group'} onClick={onAddNewGroup} />
                         <CancelBtn label={'Cancel'} onClick={() => setAddingNew(false)} />
                     </div>
                 </div>

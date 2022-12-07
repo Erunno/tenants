@@ -76,7 +76,7 @@ export default function TenantList({ tenantList, onTenantsChanged }) {
         return Math.max(...tenantList.filter(t => t).map(t => t.id).concat([-1])) + 1;
     }
 
-    return <div className='tenant-list-container mt-3 mb-3'>
+    return <div className='tenant-list-container mt-5 mb-3'>
 
         <h1>Flatmates</h1>
         <div className='tenant-table-container'>

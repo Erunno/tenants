@@ -12,21 +12,8 @@
   margin-bottom: auto;
 }
 
-.group-option {
-  margin-right: 0.2rem;
-  color: var(--bs-gray-800);
-  border: 0.13rem solid var(--bs-gray-200);
-  transition: 200ms ease-in-out;
-}
-
 .group-option.selected-group {
   border: 0.13rem solid var(--bs-success);
-}
-
-.group-option:hover {
-  background-color: var(--bs-success);
-  color: white;
-  transition: 200ms ease-in-out;
 }
 
 .group-edit-container,
